@@ -1,0 +1,1 @@
+web: gunicorn DRF_Boilerplate.wsgi
