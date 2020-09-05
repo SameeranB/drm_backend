@@ -1,4 +1,4 @@
-"""DRF_Boilerplate URL Configuration
+"""drm_backend URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -79,4 +79,5 @@ urlpatterns = [
             name='account_confirm_email'),
 
     # Documentation Endpoints
-    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='documentation')]
+    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='documentation')
+]
