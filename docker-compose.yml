@@ -21,3 +21,6 @@ services:
 
     depends_on:
       - db
+
+    links:
+      - db:db
