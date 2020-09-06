@@ -5,7 +5,8 @@
       "name": "drm_backend_web",
       "image": "sameeranbandishti/drm_backend_web",
       "hostname": "web",
-      "essential": true
+      "essential": true,
+      "memory": 128
     },
     {
       "name": "drm_backend_nginx",
@@ -20,7 +21,8 @@
       ],
       "links": [
         "server"
-      ]
+      ],
+      "memory": 128
     }
   ]
 }
