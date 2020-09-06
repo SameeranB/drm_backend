@@ -5,7 +5,18 @@
       "name": "drm_backend_web",
       "image": "sameeranbandishti/drm_backend_web",
       "hostname": "web",
-      "memory": 256
+      "memory": 256,
+      "portMappings": [
+        {
+          "containerPort": 8000
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "static_data",
+          "containerPath": "/vol/web"
+        }
+      ]
     },
     {
       "name": "drm_backend_nginx",
@@ -21,7 +32,17 @@
       "links": [
         "drm_backend_web"
       ],
-      "memory": 128
+      "memory": 128,
+      "mountPoints": [
+        {
+          "sourceVolume": "static_data",
+          "containerPath": "/vol/web"
+        }
+      ]
     }
-  ]
+  ],
+  "volumes": {
+    "name": "static_data",
+    "host": {}
+  }
 }
