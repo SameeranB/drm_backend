@@ -7,6 +7,8 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    expose:
+      - "5432"
 
   web:
     build:
@@ -17,16 +19,19 @@ services:
       - .:/app
       - static_data:/vol/web
 
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
 
+    env_file:
+      - ./drm_backend/.env
+
+    environment:
+      - PROD=1
     depends_on:
       - db
 
-    links:
-      - db:db
 
-    command: sh -c "python manage.py runserver 0.0.0.0:8000"
+#    command: sh -c "python manage.py runserver 0.0.0.0:8000"
 
   nginx:
     restart: always
@@ -35,7 +40,7 @@ services:
       context: ./nginx
 
     volumes:
-    - static_data:/vol/static
+    - static_data:/vol/web
 
     ports:
       - "8080:8080"

@@ -5,7 +5,7 @@ COPY ./uwsgi_params /etc/nginx/uwsgi_params
 
 USER root
 
-RUN mkdir -p /vol/static
-RUN chmod 755 /vol/static
+RUN mkdir -p /vol/web
+RUN chmod 755 /vol/web
 
 USER nginx
