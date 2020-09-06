@@ -42,6 +42,9 @@
     }
   ],
   "volumes": {
-    "name": "static_data"
+    "name": "static_data",
+    "host": {
+      "sourcePath": "static_data"
+    }
   }
 }
