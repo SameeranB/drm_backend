@@ -20,7 +20,7 @@
         }
       ],
       "links": [
-        "web"
+        "drm_backend_web"
       ],
       "memory": 128
     }
