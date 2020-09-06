@@ -4,7 +4,7 @@ services:
   - docker
 
 install:
-  - docker build -t sameeranbandishti/drm_backend_test -f Dockerfile
+  - docker build -t sameeranbandishti/drm_backend_test -f Dockerfile .
 
 script:
   - docker run sameeranbandishti/drm_backend_test python manage.py test
