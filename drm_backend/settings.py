@@ -26,11 +26,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "TempSecretKey")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = not bool(int(os.environ.get("PROD")))
-DEBUG = False
+DEBUG = not bool(int(os.environ.get("PROD")))
 DEBUG_PROPAGATE_EXCEPTIONS = True
 
-ALLOWED_HOSTS = ['localhost', os.environ.get("PROD_HOSTNAME_1"), os.environ.get("PROD_HOSTNAME_2")]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get("PROD_HOSTNAME_1"), os.environ.get("PROD_HOSTNAME_2")]
 
 # Application definition
 
