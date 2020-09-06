@@ -4,9 +4,12 @@ from django.utils.translation import ugettext_lazy as _
 
 from users_module.models import User
 
+
 # Register your models here.
 #
 # Uncomment the following lines to register the custom user model on the Django Admin Panel.
+
+# ToDo: Add all the fields here.
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
