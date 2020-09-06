@@ -26,10 +26,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "TempSecretKey")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = not bool(int(os.environ.get("PROD")))
 DEBUG_PROPAGATE_EXCEPTIONS = True
 
-ALLOWED_HOSTS = ['localhost', os.environ.get("PROD_HOSTNAME_1"), os.environ.get("PROD_HOSTNAME_2")]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get("PROD_HOSTNAME_1"), os.environ.get("PROD_HOSTNAME_2")]
 
 # Application definition
 
@@ -103,9 +103,9 @@ WSGI_APPLICATION = 'drm_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
         'HOST': 'db',
         'PORT': 5432,
     }
@@ -146,6 +146,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+if not bool(int(os.environ.get("PROD"))):
+    STATIC_ROOT = '/vol/web/static'
+else:
+    STATIC_ROOT = 'staticfiles'
 
 # REST FRAMEWORK SETTINGS
 REST_FRAMEWORK = {
@@ -213,16 +217,17 @@ LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL')
 # CORS SETTINGS
 CORS_ORIGIN_ALLOW_ALL = True
 
-if os.environ.get('PROD'):
-    # HEROKU SETTINGS
-    import django_heroku
-
-    django_heroku.settings(locals())
-
-if 'DATABASE_URL' in os.environ:
-    import dj_database_url
-
-    DATABASES = {'default': dj_database_url.config()}
+# Heroku Settings:
+# if bool(int(os.environ.get('PROD'))):
+#     # HEROKU SETTINGS
+#     import django_heroku
+#
+#     django_heroku.settings(locals())
+#
+# if 'DATABASE_URL' in os.environ:
+#     import dj_database_url
+#
+#     DATABASES = {'default': dj_database_url.config()}
 
 # EMAIL SETTINGS
 EMAIL_HOST = 'smtp.mailgun.org'

@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    env_file:
+      - ./drm_backend/.env
+    expose:
+      - "5432"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    volumes:
+      - .:/app
+
+    ports:
+      - "8000:8000"
+
+    env_file:
+      - ./drm_backend/.env
+
+    environment:
+      - PROD=0
+    depends_on:
+      - db
+
+    command: sh -c "python manage.py runserver 0.0.0.0:8000"
+
