@@ -30,7 +30,7 @@
         }
       ],
       "links": [
-        "drm_backend_web"
+        "web"
       ],
       "memory": 128,
       "mountPoints": [
