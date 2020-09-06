@@ -2,7 +2,7 @@
   "AWSEBDockerrunVersion": 2,
   "containerDefinitions": [
     {
-      "name": "drm_backend_web",
+      "name": "web",
       "image": "sameeranbandishti/drm_backend_web",
       "hostname": "web",
       "memory": 256,
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "name": "drm_backend_nginx",
+      "name": "nginx",
       "image": "sameeranbandishti/drm_backend_nginx",
       "hostname": "nginx",
       "essential": true,
