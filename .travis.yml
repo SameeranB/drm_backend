@@ -3,9 +3,6 @@ language: python
 python:
   - "3.8"
 
-env:
-  - DJANGO_SECRET_KEY="TEMP_TEST_KEY"
-
 services:
   - postgresql
 
