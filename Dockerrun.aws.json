@@ -1,0 +1,26 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "drm_backend_web",
+      "image": "sameeranbandishti/drm_backend_web",
+      "hostname": "web",
+      "essential": true
+    },
+    {
+      "name": "drm_backend_nginx",
+      "image": "sameeranbandishti/drm_backend_nginx",
+      "hostname": "nginx",
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 8080
+        }
+      ],
+      "links": [
+        "server"
+      ]
+    }
+  ]
+}
