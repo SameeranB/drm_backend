@@ -15,6 +15,7 @@ services:
 
     volumes:
       - .:/app
+      - static_data:/vol/web
 
     ports:
       - "8000:8000"
@@ -24,3 +25,23 @@ services:
 
     links:
       - db:db
+
+    command: sh -c "python manage.py runserver 0.0.0.0:8000"
+
+  nginx:
+    restart: always
+
+    build:
+      context: ./nginx
+
+    volumes:
+    - static_data:/vol/static
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - web
+
+volumes:
+  static_data:

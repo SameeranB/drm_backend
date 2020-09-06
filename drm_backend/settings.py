@@ -26,6 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "TempSecretKey")
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = not bool(int(os.environ.get("PROD")))
 DEBUG = False
 DEBUG_PROPAGATE_EXCEPTIONS = True
 
@@ -111,7 +112,7 @@ DATABASES = {
     }
 }
 
-if 'test' in sys.argv:
+if 'test' in sys.argv or not bool(int(os.environ.get("PROD"))):
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
@@ -146,6 +147,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/vol/web/static'
 
 # REST FRAMEWORK SETTINGS
 REST_FRAMEWORK = {
@@ -213,16 +215,17 @@ LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL')
 # CORS SETTINGS
 CORS_ORIGIN_ALLOW_ALL = True
 
-if os.environ.get('PROD'):
-    # HEROKU SETTINGS
-    import django_heroku
-
-    django_heroku.settings(locals())
-
-if 'DATABASE_URL' in os.environ:
-    import dj_database_url
-
-    DATABASES = {'default': dj_database_url.config()}
+# Heroku Settings:
+# if bool(int(os.environ.get('PROD'))):
+#     # HEROKU SETTINGS
+#     import django_heroku
+#
+#     django_heroku.settings(locals())
+#
+# if 'DATABASE_URL' in os.environ:
+#     import dj_database_url
+#
+#     DATABASES = {'default': dj_database_url.config()}
 
 # EMAIL SETTINGS
 EMAIL_HOST = 'smtp.mailgun.org'
