@@ -42,7 +42,6 @@
     }
   ],
   "volumes": {
-    "name": "static_data",
-    "host": {}
+    "name": "static_data"
   }
 }
