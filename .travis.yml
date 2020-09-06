@@ -1,0 +1,16 @@
+language: python
+
+python:
+  - "3.8"
+
+env:
+  - DJANGO_SECRET_KEY="TEMP_TEST_KEY"
+
+services:
+  - postgresql
+
+install:
+  - pip install -r requirements.txt
+
+script:
+  - python manage.py test

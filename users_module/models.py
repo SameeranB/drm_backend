@@ -68,7 +68,7 @@ class User(AbstractUser):
     user_id = models.AutoField(primary_key=True)
     email = models.EmailField(unique=True)
 
-    phone = PhoneNumberField()
+    phone = PhoneNumberField(blank=True)
 
     contacted = models.BooleanField(default=False)
     personal_info_complete = models.BooleanField(default=False)
