@@ -35,7 +35,7 @@
       "dependsOn": [
         {
           "containerName": "web",
-          "condition": "HEALTHY"
+          "condition": "STARTED"
         }
       ],
       "memory": 128,
