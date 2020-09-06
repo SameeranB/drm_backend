@@ -1,13 +1,17 @@
 language: python
 
-python:
-  - "3.8"
-
 services:
-  - postgresql
+  - docker
 
 install:
-  - pip install -r requirements.txt
+  - docker build -t sameeranbandishti/drm_backend_test -f Dockerfile
 
 script:
-  - python manage.py test
+  - docker run sameeranbandishti/drm_backend_test python manage.py test
+
+after_success:
+  - docker build -t sameeranbandishti/drm_backend_web .
+  - docker build -t sameeranbandishti/drm_backend_nginx ./nginx
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push sameeranbandishti/drm_backend_web
+  - docker push sameeranbandishti/drm_backend_nginx
