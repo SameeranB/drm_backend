@@ -32,6 +32,12 @@
       "links": [
         "web"
       ],
+      "dependsOn": [
+        {
+          "containerName": "web",
+          "condition": "HEALTHY"
+        }
+      ],
       "memory": 128,
       "mountPoints": [
         {
