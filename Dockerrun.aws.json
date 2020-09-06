@@ -20,7 +20,7 @@
         }
       ],
       "links": [
-        "server"
+        "web"
       ],
       "memory": 128
     }
