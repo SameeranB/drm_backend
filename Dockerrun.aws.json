@@ -6,11 +6,6 @@
       "image": "sameeranbandishti/drm_backend_web",
       "hostname": "web",
       "memory": 256,
-      "portMappings": [
-        {
-          "containerPort": 8000
-        }
-      ],
       "mountPoints": [
         {
           "sourceVolume": "static_data",
@@ -31,12 +26,6 @@
       ],
       "links": [
         "web"
-      ],
-      "dependsOn": [
-        {
-          "containerName": "web",
-          "condition": "STARTED"
-        }
       ],
       "memory": 128,
       "mountPoints": [

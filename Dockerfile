@@ -25,4 +25,6 @@ RUN chmod -R 755 /vol/web
 
 USER user
 
+EXPOSE 8000
+
 CMD ["entrypoint.sh"]
