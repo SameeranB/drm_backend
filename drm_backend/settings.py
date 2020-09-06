@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "TempSecretKey")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not bool(int(os.environ.get("PROD")))
+DEBUG = not bool(int(os.environ.get("PROD"), "0"))
 DEBUG_PROPAGATE_EXCEPTIONS = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get("PROD_HOSTNAME_1"), os.environ.get("PROD_HOSTNAME_2")]
@@ -117,7 +117,6 @@ if 'test' in sys.argv:
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -147,7 +146,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-if not bool(int(os.environ.get("PROD"))):
+if not bool(int(os.environ.get("PROD"), "0")):
     STATIC_ROOT = '/vol/web/static'
 else:
     STATIC_ROOT = 'staticfiles'
