@@ -3,10 +3,12 @@ version: '3'
 services:
   db:
     image: postgres
+    env_file:
+      - ./drm_backend/.env
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
     expose:
       - "5432"
 
@@ -16,22 +18,15 @@ services:
       dockerfile: Dockerfile
 
     volumes:
-      - .:/app
       - static_data:/vol/web
 
     expose:
       - "8000"
 
-    env_file:
-      - ./drm_backend/.env
-
     environment:
       - PROD=1
     depends_on:
       - db
-
-
-#    command: sh -c "python manage.py runserver 0.0.0.0:8000"
 
   nginx:
     restart: always
