@@ -1,4 +1,4 @@
-FROM python:3.8.5-alpine
+FROM python:3.8.5-alpine 
 
 WORKDIR /usr/src/app
 
@@ -12,5 +12,6 @@ RUN pip install --upgrade pip
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
-
 COPY . .
+
+ENTRYPOINT ["/usr/src/app/scripts/entrypoint.sh"]
