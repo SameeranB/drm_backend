@@ -3,7 +3,7 @@ version: '3.7'
 services:
   web:
     build:
-      context: .
+      context: ..
       dockerfile: Dockerfile-prod
     command: gunicorn drm_backend.wsgi:application --bind 0.0.0.0:8000
     volumes:
@@ -11,12 +11,12 @@ services:
     expose:
       - 8000
     env_file:
-      - ./drm_backend/.env
+      - ../drm_backend/.env
     environment:
       - PROD=1
 
   nginx:
-    build: ./nginx
+    build: ../nginx
     volumes:
       - static_volume:/home/app/web/staticfiles
     ports:
