@@ -1,22 +1,24 @@
 language: python
 
-services:
-  - docker
-
-install:
-  - docker build -t sameeranbandishti/drm_backend_test -f Dockerfile .
-
-script:
-  - docker run sameeranbandishti/drm_backend_test python manage.py test
-
-after_success:
-  - docker build -t sameeranbandishti/drm_backend_web .
-  - docker build -t sameeranbandishti/drm_backend_nginx ./nginx
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker push sameeranbandishti/drm_backend_web
-  - docker push sameeranbandishti/drm_backend_nginx
-
 # * The following configuration deploys to an elasticbeanstalk instance via docker.
+
+#services:
+#  - docker
+#
+#install:
+#  - docker build -t sameeranbandishti/drm_backend_test -f Dockerfile .
+#
+#script:
+#  - docker run sameeranbandishti/drm_backend_test python manage.py test
+
+
+#after_success:
+#  - docker build -t sameeranbandishti/drm_backend_web .
+#  - docker build -t sameeranbandishti/drm_backend_nginx ./nginx
+#  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+#  - docker push sameeranbandishti/drm_backend_web
+#  - docker push sameeranbandishti/drm_backend_nginx
+
 
 #deploy:
 #  provider: elasticbeanstalk
@@ -29,3 +31,14 @@ after_success:
 #    branch: master
 #  access_key_id: $AWS_ACCESS_KEY
 #  secret_access_key: $AWS_SECRET_KEY
+
+# * The following configuration is for performing tests without docker but not deploy
+
+services:
+  - postgresql
+
+install:
+  - pip install -r requirements.txt
+
+script:
+  - python manage.py test
