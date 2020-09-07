@@ -1,11 +1,4 @@
-FROM nginxinc/nginx-unprivileged:1-alpine
+FROM nginx:1.19.0-alpine
 
-COPY ./default.conf /etc/nginx/conf.d/default.conf
-COPY ./uwsgi_params /etc/nginx/uwsgi_params
-
-USER root
-
-RUN mkdir -p /vol/web
-RUN chmod 755 /vol/web
-
-USER nginx
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d
