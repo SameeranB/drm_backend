@@ -6,10 +6,16 @@
       "image": "sameeranbandishti/drm_backend_web",
       "hostname": "web",
       "memory": 256,
+      "command": [
+        "gunicorn",
+        "drm_backend.wsgi:application",
+        "--bind",
+        "0.0.0.0:8000"
+      ],
       "mountPoints": [
         {
-          "sourceVolume": "static_data",
-          "containerPath": "/vol/web"
+          "sourceVolume": "static_volume",
+          "containerPath": "/home/app/web/staticfiles"
         }
       ]
     },
@@ -20,27 +26,24 @@
       "essential": true,
       "portMappings": [
         {
-          "hostPort": 80,
-          "containerPort": 8080
+          "hostPort": 1337,
+          "containerPort": 80
         }
-      ],
-      "links": [
-        "web"
       ],
       "memory": 128,
       "mountPoints": [
         {
-          "sourceVolume": "static_data",
-          "containerPath": "/vol/web"
+          "sourceVolume": "static_volume",
+          "containerPath": "/home/app/web/staticfiles"
         }
       ]
     }
   ],
   "volumes": [
     {
-      "name": "static_data",
+      "name": "static_volume",
       "host": {
-        "sourcePath": "static_data"
+        "sourcePath": "static_volume"
       }
     }
   ]
