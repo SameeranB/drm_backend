@@ -1,29 +1,44 @@
 language: python
 
+# * The following configuration deploys to an elasticbeanstalk instance via docker.
+
+#services:
+#  - docker
+#
+#install:
+#  - docker build -t sameeranbandishti/drm_backend_test -f Dockerfile .
+#
+#script:
+#  - docker run sameeranbandishti/drm_backend_test python manage.py test
+
+
+#after_success:
+#  - docker build -t sameeranbandishti/drm_backend_web .
+#  - docker build -t sameeranbandishti/drm_backend_nginx ./nginx
+#  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+#  - docker push sameeranbandishti/drm_backend_web
+#  - docker push sameeranbandishti/drm_backend_nginx
+
+
+#deploy:
+#  provider: elasticbeanstalk
+#  region: us-west-2
+#  app: drm_backend
+#  env: DrmBackend-env
+#  bucket_name: elasticbeanstalk-us-west-2-367337386089
+#  bucket_path: drm_backend
+#  on:
+#    branch: master
+#  access_key_id: $AWS_ACCESS_KEY
+#  secret_access_key: $AWS_SECRET_KEY
+
+# * The following configuration is for performing tests without docker but not deploy
+
 services:
-  - docker
+  - postgresql
 
 install:
-  - docker build -t sameeranbandishti/drm_backend_test -f Dockerfile .
+  - pip install -r requirements.txt
 
 script:
-  - docker run sameeranbandishti/drm_backend_test python manage.py test
-
-after_success:
-  - docker build -t sameeranbandishti/drm_backend_web .
-  - docker build -t sameeranbandishti/drm_backend_nginx ./nginx
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker push sameeranbandishti/drm_backend_web
-  - docker push sameeranbandishti/drm_backend_nginx
-
-deploy:
-  provider: elasticbeanstalk
-  region: us-west-2
-  app: drm_backend
-  env: DrmBackend-env
-  bucket_name: elasticbeanstalk-us-west-2-367337386089
-  bucket_path: drm_backend
-  on:
-    branch: master
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: $AWS_SECRET_KEY
+  - python manage.py test
