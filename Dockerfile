@@ -1,30 +1,16 @@
-FROM python:latest
+FROM python:3.8.5-alpine
 
+WORKDIR /usr/src/app
+
+ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-ENV PATH="/scripts:${PATH}"
 
+RUN apk update \
+    && apk add postgresql-dev gcc python3-dev musl-dev zlib-dev jpeg-dev
 
-ADD requirements.txt .
-
+RUN pip install --upgrade pip
+COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
-RUN mkdir /app
-COPY . /app
-WORKDIR /app
 
-COPY ./scripts /scripts
-
-RUN chmod +x /scripts/*
-
-RUN mkdir -p /vol/web/static
-
-RUN adduser --disabled-password --gecos '' user
-
-RUN chown -R user:user /vol
-RUN chmod -R 755 /vol/web
-
-USER user
-
-EXPOSE 8000
-
-CMD ["entrypoint.sh"]
+COPY . .
