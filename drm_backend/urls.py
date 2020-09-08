@@ -18,7 +18,7 @@ from allauth.account.views import ConfirmEmailView as AllauthConfirmEmailView
 # Django Imports
 from django.contrib import admin
 from django.http import HttpResponse
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 # Auto Documentation
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
@@ -30,7 +30,11 @@ from rest_auth.views import (
 # Rest Framework
 from rest_framework import permissions
 
+# Routers
+
 # Setup for Swagger Documentation
+from users_module.views import GoogleLogin
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Snippets API",
@@ -77,6 +81,8 @@ urlpatterns = [
          name='account_email_verification_sent'),
     re_path(r'^authentication/registration/account-confirm-email/(?P<key>[-:\w]+)/$', AllauthConfirmEmailView.as_view(),
             name='account_confirm_email'),
+
+    path('authentication/registration/oauth/google/', GoogleLogin.as_view(), name="google_oauth"),
 
     # Documentation Endpoints
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='documentation')
