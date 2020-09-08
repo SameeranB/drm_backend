@@ -2,9 +2,8 @@ from rest_auth.registration.serializers import RegisterSerializer
 from rest_auth.serializers import LoginSerializer
 from rest_framework import serializers
 
-
-# Uncomment the following serializers to set up custom serializers for login and registration. You will also have to
-# uncomment lines in the settings.py file in order to use custom serializers.
+# * Authentication Serializers
+from users_module.models import User
 
 
 class CustomLoginSerializer(LoginSerializer):
@@ -18,13 +17,6 @@ class CustomRegisterSerializer(RegisterSerializer):
     first_name = serializers.CharField(max_length=100)
     last_name = serializers.CharField(max_length=100)
 
-    # custom_field = serializers.CharField(max_length=100)
-
-    # def validate_custom_field(self, custom_field):
-    #     if custom_field in User.objects.all().values_list('custom_field', flat=True):
-    #         raise serializers.ValidationError("A user with that custom_field already exists.")
-    #     return custom_field
-
     def get_cleaned_data(self):
         return {
             'password1': self.validated_data.get('password1', ''),
@@ -34,6 +26,37 @@ class CustomRegisterSerializer(RegisterSerializer):
             # 'custom_field': self.validated_data.get('custom_field', ''),
         }
 
-    # def custom_signup(self, request, user):
-    # user.custom_field = self.get_cleaned_data().get("custom_field")
-    # user.save()
+
+# * User ViewSet Serializers
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    """
+    This serializer is to be used to display a list of users to the admin. The only fields editable are 'payment_completed' and 'contacted'
+    """
+
+    class Meta:
+        model = User
+        exclude = ['password', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'groups', 'user_permissions']
+        read_only_fields = ['user_id', 'email', 'first_name', 'last_name', 'payment_method', 'phone',
+                            'personal_info_complete', 'family_medical_history_complete',
+                            'personal_medical_history_complete', 'daily_routine_complete', 'on_boarding_complete']
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    """
+    This serializer is to be used by the user to update the payment method of the user.
+    """
+
+    class Meta:
+        model = User
+        fields = ['payment_method']
+
+
+class AdminConfirmSerializer(serializers.ModelSerializer):
+    """
+    This serializer is to be used by the admin to confirm the call and the payment
+    """
+
+    class Meta:
+        model = User
+        fields = ['payment_complete', 'contacted']
