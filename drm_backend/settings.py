@@ -220,10 +220,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # EMAIL SETTINGS
 EMAIL_HOST = 'smtp.mailgun.org'
-EMAIL_HOST_USER = 'no-reply@mail.your-mailgun-registered-subdomain.domain.com'
-# EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = "your-mailgun-api-key"
-# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = "no-reply@subdomain.domain.com"
+# EMAIL_HOST_USER = 'no-reply@mail.your-mailgun-registered-subdomain.domain.com'
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = "your-mailgun-api-key"
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.environ.get("EMAIL_FROM")
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
