@@ -10,8 +10,9 @@ from rest_framework.viewsets import GenericViewSet
 
 from drm_backend.functions import mail
 from drm_backend.permissions import IsOwnerOrAdmin, IsOwner
-from users_module.models import User, PersonalInformation
-from users_module.serializers import UserProfileSerializer, PaymentSerializer, AdminConfirmSerializer
+from users_module.models import User, PersonalInformation, PersonalMedicalHistory
+from users_module.serializers import UserProfileSerializer, PaymentSerializer, AdminConfirmSerializer, \
+    PersonalInformationSerializer, FamilyMedicalHistorySerializer, PersonalMedicalHistorySerializer
 
 
 # Create your views here.
@@ -35,7 +36,10 @@ class UserViewSet(ListModelMixin, GenericViewSet):
     serializers = {
         'list': UserProfileSerializer,
         'payment': PaymentSerializer,
-        'confirm': AdminConfirmSerializer
+        'confirm': AdminConfirmSerializer,
+        'personal_information': PersonalInformationSerializer,
+        'family_medical_history': FamilyMedicalHistorySerializer,
+        'personal_medical_history': PersonalMedicalHistorySerializer
     }
 
     permissions = {
@@ -57,6 +61,10 @@ class UserViewSet(ListModelMixin, GenericViewSet):
 
     def get_permissions(self):
         self.permission_classes = self.permissions.get(self.action)
+
+        if self.permission_classes is None:
+            self.permission_classes = [IsAuthenticated]
+
         return super(UserViewSet, self).get_permissions()
 
     # * Endpoints
@@ -114,7 +122,7 @@ class UserViewSet(ListModelMixin, GenericViewSet):
         :return:
         """
         user = self.get_object()
-        personal_information = PersonalInformation.objects.get_or_create(user=user)
+        personal_information = PersonalInformation.objects.get_or_create(user=user)[0]
         serializer = self.get_serializer_class()(personal_information, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -122,4 +130,44 @@ class UserViewSet(ListModelMixin, GenericViewSet):
             'message': "Personal information updated"
         }, status=status.HTTP_200_OK)
 
-    # Todo: Family medical history should be multiple. Medications should be nested.
+    @action(methods=['patch'], detail=True)
+    def family_medical_history(self, request, *args, **kwargs):
+        """
+        This endpoint allows users to update their family medical history
+
+        :permissions: IsAuthenticated, IsOwner
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        user = self.get_object()
+        serializer = self.get_serializer_class()(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=user)
+        return Response({
+            'message': "Family medical history updated"
+        }, status=status.HTTP_200_OK)
+
+    @action(methods=['patch'], detail=True)
+    def personal_medical_history(self, request, *args, **kwargs):
+        """
+        This endpoint allows users to update their personal medical history
+
+        :permissions: IsAuthenticated, IsOwner
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        user = self.get_object()
+        personal_medical_history = PersonalMedicalHistory.objects.get_or_create(user=user)[0]
+        serializer = self.get_serializer_class()(personal_medical_history, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=user)
+        return Response({
+            'message': "Personal medical history updated"
+        }, status=status.HTTP_200_OK)
+
+    # Todo: Medications should be nested.
+    # Todo: Daily Routine

@@ -3,7 +3,7 @@ from rest_auth.serializers import LoginSerializer
 from rest_framework import serializers
 
 # * Authentication Serializers
-from users_module.models import User
+from users_module.models import User, FamilyMedicalHistory, PersonalInformation, PersonalMedicalHistory
 
 
 class CustomLoginSerializer(LoginSerializer):
@@ -49,7 +49,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['payment_method']
+        fields = ['payment_method', ]
 
 
 class AdminConfirmSerializer(serializers.ModelSerializer):
@@ -60,3 +60,33 @@ class AdminConfirmSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['payment_complete', 'contacted']
+
+
+class PersonalInformationSerializer(serializers.ModelSerializer):
+    """
+    This serializer is to be used by users to input their personal information.
+    """
+
+    class Meta:
+        model = PersonalInformation
+        exclude = ['user', 'id']
+
+
+class FamilyMedicalHistorySerializer(serializers.ModelSerializer):
+    """
+    This serializer is to be used by the users to input family members and any conditions they may be suffering from.
+    """
+
+    class Meta:
+        model = FamilyMedicalHistory
+        exclude = ['user', 'id']
+
+
+class PersonalMedicalHistorySerializer(serializers.ModelSerializer):
+    """
+    This serializer is to be used by the users to input family members and any conditions they may be suffering from.
+    """
+
+    class Meta:
+        model = PersonalMedicalHistory
+        exclude = ['user', 'id']
