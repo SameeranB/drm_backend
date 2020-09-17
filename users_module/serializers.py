@@ -3,7 +3,8 @@ from rest_auth.serializers import LoginSerializer
 from rest_framework import serializers
 
 # * Authentication Serializers
-from users_module.models import User, FamilyMedicalHistory, PersonalInformation, PersonalMedicalHistory
+from users_module.models import User, FamilyMedicalHistory, PersonalInformation, PersonalMedicalHistory, DailyRoutine, \
+    Medication
 
 
 class CustomLoginSerializer(LoginSerializer):
@@ -49,7 +50,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['payment_method', ]
+        fields = ['payment_method', 'payment_confirmation_requested']
 
 
 class AdminConfirmSerializer(serializers.ModelSerializer):
@@ -90,3 +91,42 @@ class PersonalMedicalHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = PersonalMedicalHistory
         exclude = ['user', 'id']
+
+
+class DailyRoutineSerializer(serializers.ModelSerializer):
+    """
+    This serializer is used by the user to enter their daily routine.
+    """
+
+    class Meta:
+        model = DailyRoutine
+        exclude = ['user', 'id']
+
+
+class MedicationSerializer(serializers.ModelSerializer):
+    """
+    This serializer is to be used by the users to enter any medications they may be using.
+    """
+
+    class Meta:
+        model = Medication
+        exclude = ['user', 'id']
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    """
+    This serializer is to be used by both the user and the admin to view details about a user.
+    """
+
+    personal_information = PersonalInformationSerializer(read_only=True)
+    personal_medical_history = PersonalMedicalHistorySerializer(read_only=True)
+    medication = MedicationSerializer(read_only=True, many=True)
+    family_medical_history = FamilyMedicalHistorySerializer(read_only=True, many=True)
+    daily_routine = DailyRoutineSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        exclude = ['password', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'groups', 'user_permissions']
+        read_only_fields = ['user_id', 'email', 'first_name', 'last_name', 'payment_method', 'phone',
+                            'personal_info_complete', 'family_medical_history_complete',
+                            'personal_medical_history_complete', 'daily_routine_complete', 'on_boarding_complete']

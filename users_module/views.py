@@ -3,16 +3,17 @@ from rest_auth.registration.views import SocialLoginView
 # * Authentication Views:
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.mixins import ListModelMixin
+from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from drm_backend.functions import mail
-from drm_backend.permissions import IsOwnerOrAdmin, IsOwner
-from users_module.models import User, PersonalInformation, PersonalMedicalHistory
+from drm_backend.permissions import IsOwnerOrAdmin, IsOwner, IsOwnerOrAdminReadOnly
+from users_module.models import User, PersonalInformation, PersonalMedicalHistory, DailyRoutine
 from users_module.serializers import UserProfileSerializer, PaymentSerializer, AdminConfirmSerializer, \
-    PersonalInformationSerializer, FamilyMedicalHistorySerializer, PersonalMedicalHistorySerializer
+    PersonalInformationSerializer, FamilyMedicalHistorySerializer, PersonalMedicalHistorySerializer, \
+    DailyRoutineSerializer, UserDetailSerializer
 
 
 # Create your views here.
@@ -27,7 +28,7 @@ class GoogleLogin(SocialLoginView):
 
 # * User Views
 
-class UserViewSet(ListModelMixin, GenericViewSet):
+class UserViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     """
     This viewset contains endpoints pertaining to the users on the platform
     """
@@ -35,21 +36,26 @@ class UserViewSet(ListModelMixin, GenericViewSet):
     # * Configuration
     serializers = {
         'list': UserProfileSerializer,
+        'retrieve': UserDetailSerializer,
         'payment': PaymentSerializer,
         'confirm': AdminConfirmSerializer,
         'personal_information': PersonalInformationSerializer,
         'family_medical_history': FamilyMedicalHistorySerializer,
-        'personal_medical_history': PersonalMedicalHistorySerializer
+        'personal_medical_history': PersonalMedicalHistorySerializer,
+        'daily_routine': DailyRoutineSerializer,
+        'medication': PersonalMedicalHistorySerializer
     }
 
     permissions = {
         'list': [IsAuthenticated, IsAdminUser],
+        'retrieve': [IsAuthenticated, IsOwnerOrAdminReadOnly],
         'payment': [IsAuthenticated, IsOwnerOrAdmin],
         'confirm': [IsAuthenticated, IsAdminUser],
         'personal_information': [IsAuthenticated, IsOwner],
         'family_medical_history': [IsAuthenticated, IsOwner],
         'personal_medical_history': [IsAuthenticated, IsOwner],
         'daily_routine': [IsAuthenticated, IsOwner],
+        'medication': [IsAuthenticated, IsOwner],
     }
 
     queryset = User.objects.filter(is_staff=False, is_superuser=False, on_boarding_complete=False)
@@ -83,13 +89,14 @@ class UserViewSet(ListModelMixin, GenericViewSet):
         serializer = self.get_serializer_class()(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        mail('Payment Confirmation Requested',
-             f"User {user.first_name} {user.last_name} has requested a payment confirmation. "
-             f"\nPlease check if you have received the payment and update the same in the system."
-             f"\nThe payment method was {user.payment_method}.",
-             "sameeranbandishti93@gmail.com")
+        if user.payment_confirmation_requested:
+            mail('Payment Confirmation Requested',
+                 f"User {user.first_name} {user.last_name} has requested a payment confirmation. "
+                 f"\nPlease check if you have received the payment and update the same in the system."
+                 f"\nThe payment method was {user.payment_method}.",
+                 "sameeranbandishti93@gmail.com")
         return Response({
-            'message': "Payment method updated"
+            'message': "Payment information updated"
         }, status=status.HTTP_200_OK)
 
     @action(methods=['patch'], detail=True)
@@ -169,5 +176,42 @@ class UserViewSet(ListModelMixin, GenericViewSet):
             'message': "Personal medical history updated"
         }, status=status.HTTP_200_OK)
 
-    # Todo: Medications should be nested.
-    # Todo: Daily Routine
+    @action(methods=['patch'], detail=True)
+    def medication(self, request, *args, **kwargs):
+        """
+        This endpoint allows users to add any medications they may be taking.
+
+        :permissions: IsAuthenticated, IsOwner
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        user = self.get_object()
+        serializer = self.get_serializer_class()(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=user)
+        return Response({
+            'message': "Medication updated"
+        }, status=status.HTTP_200_OK)
+
+    @action(methods=['patch'], detail=True)
+    def daily_routine(self, request, *args, **kwargs):
+        """
+        This endpoint allows users to update their personal medical history
+
+        :permissions: IsAuthenticated, IsOwner
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        user = self.get_object()
+        daily_routine = DailyRoutine.objects.get_or_create(user=user)
+        serializer = self.get_serializer_class()(daily_routine, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=user)
+        return Response({
+            'message': "Daily routine updated"
+        }, status=status.HTTP_200_OK)
+

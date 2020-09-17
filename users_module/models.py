@@ -96,6 +96,7 @@ class User(AbstractUser):
         ('GPay', 'GPay'),
         ('Bank Transfer', 'Bank Transfer'),
     ), blank=True)
+    payment_confirmation_requested = models.BooleanField(default=False)
     payment_complete = models.BooleanField(default=False)
     on_boarding_complete = models.BooleanField(default=False)
 
@@ -304,7 +305,7 @@ class DailyRoutine(MasterBaseClass):
         super(DailyRoutine, self).save(*args, **kwargs)
 
 
-class Medications(MasterBaseClass):
+class Medication(MasterBaseClass):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='medications')
     dosage = models.IntegerField(blank=True)
     name = models.CharField(max_length=500)
