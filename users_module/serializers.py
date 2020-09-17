@@ -73,14 +73,28 @@ class PersonalInformationSerializer(serializers.ModelSerializer):
         exclude = ['user', 'id']
 
 
-class FamilyMedicalHistorySerializer(serializers.ModelSerializer):
+class FamilyMedicalHistoryDetailSerializer(serializers.ModelSerializer):
+    """
+    This serializer is to be used by the users to input family members and any conditions they may be suffering from.
+    """
+
+    id = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = FamilyMedicalHistory
+        exclude = ['user']
+        read_only_fields = ['id']
+
+
+class FamilyMedicalHistoryAddSerializer(serializers.ModelSerializer):
     """
     This serializer is to be used by the users to input family members and any conditions they may be suffering from.
     """
 
     class Meta:
         model = FamilyMedicalHistory
-        exclude = ['user', 'id']
+        exclude = ['user']
+        read_only_fields = ['id']
 
 
 class PersonalMedicalHistorySerializer(serializers.ModelSerializer):
@@ -103,14 +117,26 @@ class DailyRoutineSerializer(serializers.ModelSerializer):
         exclude = ['user', 'id']
 
 
-class MedicationSerializer(serializers.ModelSerializer):
+class AddOrViewMedicationSerializer(serializers.ModelSerializer):
     """
     This serializer is to be used by the users to enter any medications they may be using.
     """
 
     class Meta:
         model = Medication
-        exclude = ['user', 'id']
+        exclude = ['user']
+        read_only_fields = ['id']
+
+
+class DeleteMedicationSerializer(serializers.ModelSerializer):
+    """
+    This serializer is to be used by the users to  delete any medications they may have added
+    """
+    id = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = Medication
+        fields = ['id']
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -120,8 +146,8 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
     personal_information = PersonalInformationSerializer(read_only=True)
     personal_medical_history = PersonalMedicalHistorySerializer(read_only=True)
-    medication = MedicationSerializer(read_only=True, many=True)
-    family_medical_history = FamilyMedicalHistorySerializer(read_only=True, many=True)
+    medications = AddOrViewMedicationSerializer(read_only=True, many=True)
+    family_medical_history = FamilyMedicalHistoryAddSerializer(read_only=True, many=True)
     daily_routine = DailyRoutineSerializer(read_only=True)
 
     class Meta:

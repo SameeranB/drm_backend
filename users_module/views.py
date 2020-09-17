@@ -10,10 +10,12 @@ from rest_framework.viewsets import GenericViewSet
 
 from drm_backend.functions import mail
 from drm_backend.permissions import IsOwnerOrAdmin, IsOwner, IsOwnerOrAdminReadOnly
-from users_module.models import User, PersonalInformation, PersonalMedicalHistory, DailyRoutine
+from users_module.models import User, PersonalInformation, PersonalMedicalHistory, DailyRoutine, Medication, \
+    FamilyMedicalHistory
 from users_module.serializers import UserProfileSerializer, PaymentSerializer, AdminConfirmSerializer, \
-    PersonalInformationSerializer, FamilyMedicalHistorySerializer, PersonalMedicalHistorySerializer, \
-    DailyRoutineSerializer, UserDetailSerializer
+    PersonalInformationSerializer, PersonalMedicalHistorySerializer, \
+    DailyRoutineSerializer, UserDetailSerializer, AddOrViewMedicationSerializer, DeleteMedicationSerializer, \
+    FamilyMedicalHistoryAddSerializer, FamilyMedicalHistoryDetailSerializer
 
 
 # Create your views here.
@@ -35,15 +37,36 @@ class UserViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
 
     # * Configuration
     serializers = {
-        'list': UserProfileSerializer,
-        'retrieve': UserDetailSerializer,
-        'payment': PaymentSerializer,
-        'confirm': AdminConfirmSerializer,
-        'personal_information': PersonalInformationSerializer,
-        'family_medical_history': FamilyMedicalHistorySerializer,
-        'personal_medical_history': PersonalMedicalHistorySerializer,
-        'daily_routine': DailyRoutineSerializer,
-        'medication': PersonalMedicalHistorySerializer
+        'list': {
+            "GET": UserProfileSerializer,
+        },
+        'retrieve': {
+            "GET": UserDetailSerializer,
+        },
+        'payment': {
+            "PATCH": PaymentSerializer,
+        },
+        'confirm': {
+            "PATCH": AdminConfirmSerializer
+        },
+        'personal_information': {
+            "PATCH": PersonalInformationSerializer
+        },
+        'family_medical_history': {
+            "POST": FamilyMedicalHistoryAddSerializer,
+            "PATCH": FamilyMedicalHistoryDetailSerializer,
+            "DELETE": FamilyMedicalHistoryDetailSerializer,
+        },
+        'personal_medical_history': {
+            "PATCH": PersonalMedicalHistorySerializer
+        },
+        'daily_routine': {
+            "PATCH": DailyRoutineSerializer
+        },
+        'medication': {
+            "PATCH": AddOrViewMedicationSerializer,
+            "DELETE": DeleteMedicationSerializer
+        }
     }
 
     permissions = {
@@ -63,7 +86,7 @@ class UserViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     # * Functions
 
     def get_serializer_class(self):
-        return self.serializers.get(self.action)
+        return self.serializers.get(self.action).get(self.request.method)
 
     def get_permissions(self):
         self.permission_classes = self.permissions.get(self.action)
@@ -137,7 +160,7 @@ class UserViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
             'message': "Personal information updated"
         }, status=status.HTTP_200_OK)
 
-    @action(methods=['patch'], detail=True)
+    @action(methods=['post', 'patch', 'delete'], detail=True)
     def family_medical_history(self, request, *args, **kwargs):
         """
         This endpoint allows users to update their family medical history
@@ -149,12 +172,28 @@ class UserViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
         :return:
         """
         user = self.get_object()
-        serializer = self.get_serializer_class()(data=request.data, many=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(user=user)
-        return Response({
-            'message': "Family medical history updated"
-        }, status=status.HTTP_200_OK)
+        if request.method == 'POST':
+            serializer = self.get_serializer_class()(data=request.data, many=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(user=user)
+            return Response({
+                'message': "Family medical history added"
+            }, status=status.HTTP_200_OK)
+        else:
+            serializer = self.get_serializer_class()(
+                FamilyMedicalHistory.objects.get(user=user, id=request.data.get('id')),
+                data=request.data,
+                partial=True)
+            serializer.is_valid(raise_exception=True)
+            if request.method == 'PATCH':
+                serializer.save(user=user)
+                return Response({
+                    'message': "Family medical history updated"
+                }, status=status.HTTP_200_OK)
+            elif request.method == 'DELETE':
+                family_medical_history = FamilyMedicalHistory.objects.get(user=user, id=serializer.data.get("id"))
+                family_medical_history.delete()
+                return Response({"message": "The family medical history has been deleted"}, status=status.HTTP_200_OK)
 
     @action(methods=['patch'], detail=True)
     def personal_medical_history(self, request, *args, **kwargs):
@@ -176,7 +215,7 @@ class UserViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
             'message': "Personal medical history updated"
         }, status=status.HTTP_200_OK)
 
-    @action(methods=['patch'], detail=True)
+    @action(methods=['patch', 'delete'], detail=True)
     def medication(self, request, *args, **kwargs):
         """
         This endpoint allows users to add any medications they may be taking.
@@ -188,12 +227,19 @@ class UserViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
         :return:
         """
         user = self.get_object()
-        serializer = self.get_serializer_class()(data=request.data, many=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(user=user)
-        return Response({
-            'message': "Medication updated"
-        }, status=status.HTTP_200_OK)
+        if request.method == 'PATCH':
+            serializer = self.get_serializer_class()(data=request.data, many=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(user=user)
+            return Response({
+                'message': "Medication updated"
+            }, status=status.HTTP_200_OK)
+        elif request.method == 'DELETE':
+            serializer = self.get_serializer_class()(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            medication = Medication.objects.get(user=user, id=serializer.data.get("id"))
+            medication.delete()
+            return Response({"message": "The medication has been deleted"}, status=status.HTTP_200_OK)
 
     @action(methods=['patch'], detail=True)
     def daily_routine(self, request, *args, **kwargs):
@@ -214,4 +260,3 @@ class UserViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
         return Response({
             'message': "Daily routine updated"
         }, status=status.HTTP_200_OK)
-
