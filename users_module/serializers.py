@@ -83,7 +83,7 @@ class FamilyMedicalHistoryDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = FamilyMedicalHistory
         exclude = ['user']
-        read_only_fields = ['id']
+        read_only_fields = ['id', 'member']
 
 
 class FamilyMedicalHistoryAddSerializer(serializers.ModelSerializer):
