@@ -22,6 +22,22 @@ class MasterBaseClass(models.Model):
     def is_owner(self, user):
         return self.user.email == user.email
 
+    def is_fully_filled(self, omit=None):
+        """
+        Checks if all the fields have been filled
+        """
+        if omit is None:
+            omit = []
+
+        fields_names = [f.name for f in self._meta.get_fields()]
+
+        for field_name in fields_names:
+            value = getattr(self, field_name)
+            if (value is None or value == '') and value not in omit:
+                return False
+
+        return True
+
     class Meta:
         abstract = True
 
@@ -72,7 +88,6 @@ class User(AbstractUser):
 
     contacted = models.BooleanField(default=False)
     personal_info_complete = models.BooleanField(default=False)
-    family_medical_history_complete = models.BooleanField(default=False)
     personal_medical_history_complete = models.BooleanField(default=False)
     daily_routine_complete = models.BooleanField(default=False)
 
@@ -81,6 +96,7 @@ class User(AbstractUser):
         ('GPay', 'GPay'),
         ('Bank Transfer', 'Bank Transfer'),
     ), blank=True)
+    payment_confirmation_requested = models.BooleanField(default=False)
     payment_complete = models.BooleanField(default=False)
     on_boarding_complete = models.BooleanField(default=False)
 
@@ -146,6 +162,13 @@ class PersonalInformation(MasterBaseClass):
             today = date.today()
             return today.year - self.date_of_birth.year - (
                     (today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
+
+    def save(self, *args, **kwargs):
+        if self.is_fully_filled():
+            user = User.objects.get(user_id=getattr(self, 'user'))
+            user.personal_info_complete = True
+            user.save()
+        super(PersonalInformation, self).save(*args, **kwargs)
 
 
 class FamilyMedicalHistory(MasterBaseClass):
@@ -225,6 +248,13 @@ class PersonalMedicalHistory(MasterBaseClass):
         ('Heavy', 'Heavy')
     ), blank=True)
 
+    def save(self, *args, **kwargs):
+        if self.is_fully_filled():
+            user = User.objects.get(user_id=getattr(self, 'user'))
+            user.personal_medical_history_complete = True
+            user.save()
+        super(PersonalMedicalHistory, self).save(*args, **kwargs)
+
 
 class DailyRoutine(MasterBaseClass):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='daily_routine')
@@ -256,8 +286,26 @@ class DailyRoutine(MasterBaseClass):
     yoga = models.BooleanField(blank=True)
     walk = models.BooleanField(blank=True)
 
+    def save(self, *args, **kwargs):
+        omit = [
+            'breakfast_time',
+            'mid_morning_time',
+            'lunch_time',
+            'lunch_location',
+            'tea_time',
+            'dinner_time',
+            'office_start_time',
+            'office_end_time',
+            'exercise_time'
+        ]
+        if self.is_fully_filled(omit):
+            user = User.objects.get(user_id=getattr(self, 'user'))
+            user.daily_routine_complete = True
+            user.save()
+        super(DailyRoutine, self).save(*args, **kwargs)
 
-class Medications(MasterBaseClass):
+
+class Medication(MasterBaseClass):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='medications')
     dosage = models.IntegerField(blank=True)
     name = models.CharField(max_length=500)

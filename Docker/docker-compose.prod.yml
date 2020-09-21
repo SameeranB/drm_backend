@@ -4,7 +4,7 @@ services:
   web:
     build:
       context: ..
-      dockerfile: Dockerfile-prod
+      dockerfile: Docker/Dockerfile-prod
     command: gunicorn drm_backend.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/home/app/web/staticfiles

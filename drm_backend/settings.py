@@ -26,7 +26,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "TempSecretKey")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not bool(int(os.environ.get("PROD", "0")))
+# DEBUG = not bool(int(os.environ.get("PROD", "0")))
+DEBUG = True
 DEBUG_PROPAGATE_EXCEPTIONS = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get("PROD_HOSTNAME_1"), os.environ.get("PROD_HOSTNAME_2")]
@@ -220,10 +221,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # EMAIL SETTINGS
 EMAIL_HOST = 'smtp.mailgun.org'
-EMAIL_HOST_USER = 'no-reply@mail.your-mailgun-registered-subdomain.domain.com'
-# EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = "your-mailgun-api-key"
-# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = "no-reply@subdomain.domain.com"
+# EMAIL_HOST_USER = 'no-reply@mail.your-mailgun-registered-subdomain.domain.com'
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = "your-mailgun-api-key"
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.environ.get("EMAIL_FROM")
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True

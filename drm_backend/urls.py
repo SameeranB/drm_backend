@@ -33,6 +33,7 @@ from rest_framework import permissions
 # Routers
 
 # Setup for Swagger Documentation
+from users_module.routers import UserRouter
 from users_module.views import GoogleLogin
 
 schema_view = get_schema_view(
@@ -83,6 +84,9 @@ urlpatterns = [
             name='account_confirm_email'),
 
     path('authentication/registration/oauth/google/', GoogleLogin.as_view(), name="google_oauth"),
+
+    # User Module
+    path('', include(UserRouter.urls)),
 
     # Documentation Endpoints
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='documentation')

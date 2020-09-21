@@ -1,18 +1,15 @@
 {% load account %}{% user_display user as user_display %}{% load i18n %}{% autoescape off %}{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Hello from {{ site_name }}!
 
-You're receiving this e-mail because user {{ user_display }} has given yours as an e-mail address to connect their account.
+You're receiving this e-mail because you have registered on our platform as the user {{ user_display }}.
 
 We're glad to have you onboard!
 
-Before we may continue, you must confirm you email address with the link below and get in touch with our clinic for an intial consultation with Dr Manisha Bandishti.
+Before we may continue, we request you to please get in touch with our clinic for an intial consultation with Dr Manisha Bandishti.
 This consultation will be completely free of cost, the purpose is to identify your needs and understand how to move forward.
 
 Please contact us at: +91 7350530101
 
 We hope to hear from you soon!
-
-To confirm your email address, go to {{ activate_url }}
-
 
 {% endblocktrans %}
 {% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Thank you from {{ site_name }}!
