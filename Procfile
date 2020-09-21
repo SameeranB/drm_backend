@@ -1,1 +1,1 @@
-web: gunicorn DRF_Boilerplate.wsgi
+web: gunicorn drm_backend.wsgi

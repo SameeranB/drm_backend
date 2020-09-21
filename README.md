@@ -9,8 +9,8 @@
 > View the API Documentation here.
 
 ---
-
 [![Build Status](https://travis-ci.org/SameeranB/drm_backend.svg?branch=master)](https://travis-ci.org/SameeranB/drm_backend)
+
 
 ## Setup
 
@@ -27,3 +27,4 @@ This project is built using the `Django Rest Framework` . The following are the 
 * Run the development server using `python manage.py runserver`.
 * Run the development Docker containers using `docker-compose -f Docker/docker-compose.dev.yml  up --build`.
 * Run the production Docker containers using `docker-compose -f Docker/docker-compose.prod.yml  up --build`.
+

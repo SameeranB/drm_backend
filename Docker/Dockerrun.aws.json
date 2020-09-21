@@ -1,0 +1,50 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "web",
+      "image": "sameeranbandishti/drm_backend_web",
+      "hostname": "web",
+      "memory": 256,
+      "command": [
+        "gunicorn",
+        "drm_backend.wsgi:application",
+        "--bind",
+        "0.0.0.0:8000"
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "static_volume",
+          "containerPath": "/home/app/web/staticfiles"
+        }
+      ]
+    },
+    {
+      "name": "nginx",
+      "image": "sameeranbandishti/drm_backend_nginx",
+      "hostname": "nginx",
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 1337,
+          "containerPort": 80
+        }
+      ],
+      "memory": 128,
+      "mountPoints": [
+        {
+          "sourceVolume": "static_volume",
+          "containerPath": "/home/app/web/staticfiles"
+        }
+      ]
+    }
+  ],
+  "volumes": [
+    {
+      "name": "static_volume",
+      "host": {
+        "sourcePath": "static_volume"
+      }
+    }
+  ]
+}
