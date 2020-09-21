@@ -1,107 +1,1467 @@
 {
-  "openapi": "3.0.0",
-  "info": {
-    "version": "0.0.1",
-    "title": "DRM API",
-    "license": {
-      "name": "MIT"
-    }
-  },
-  "servers": [
-    {
-      "url": "http://petstore.swagger.io/v1"
-    }
-  ],
-  "paths": {
-    "/user": {
-      "get": {
-        "summary": "Details about a user",
-        "operationId": "listUser",
-        "tags": [
-          "user"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "ID of the user",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Details about a user",
-            "headers": {
-              "x-next": {
-                "description": "A link to the next page of responses",
-                "schema": {
-                  "type": "string"
-                }
-              }
+    "swagger": "2.0",
+    "info": {
+        "title": "DRM Backend API",
+        "description": "DrManishaBandisht Backend API",
+        "termsOfService": "https://www.google.com/policies/terms/",
+        "contact": {
+            "email": "sameeranbandishti@caronexlabs.com"
+        },
+        "license": {
+            "name": "BSD License"
+        },
+        "version": "v1"
+    },
+    "host": "127.0.0.1:8000",
+    "schemes": [
+        "http"
+    ],
+    "basePath": "/",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "Basic": {
+            "type": "basic"
+        }
+    },
+    "security": [
+        {
+            "Basic": []
+        }
+    ],
+    "paths": {
+        "/authentication/login/": {
+            "post": {
+                "operationId": "authentication_login_create",
+                "description": "Check the credentials and return the REST Token\nif the credentials are valid and authenticated.\nCalls Django Auth login method to register User ID\nin Django session framework\n\nAccept the following POST parameters: username, password\nReturn the REST Framework Token Object's key.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CustomLogin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/CustomLogin"
+                        }
+                    }
+                },
+                "tags": [
+                    "authentication"
+                ]
             },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
+            "parameters": []
+        },
+        "/authentication/logout/": {
+            "get": {
+                "operationId": "authentication_logout_list",
+                "summary": "Calls Django logout method and delete the Token object\nassigned to the current User object.",
+                "description": "Accepts/Returns nothing.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "authentication"
+                ]
+            },
+            "post": {
+                "operationId": "authentication_logout_create",
+                "summary": "Calls Django logout method and delete the Token object\nassigned to the current User object.",
+                "description": "Accepts/Returns nothing.",
+                "parameters": [],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "authentication"
+                ]
+            },
+            "parameters": []
+        },
+        "/authentication/password/change/": {
+            "post": {
+                "operationId": "authentication_password_change_create",
+                "summary": "Calls Django Auth SetPasswordForm save method.",
+                "description": "Accepts the following POST parameters: new_password1, new_password2\nReturns the success/fail message.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PasswordChange"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/PasswordChange"
+                        }
+                    }
+                },
+                "tags": [
+                    "authentication"
+                ]
+            },
+            "parameters": []
+        },
+        "/authentication/password/reset/": {
+            "post": {
+                "operationId": "authentication_password_reset_create",
+                "summary": "Calls Django Auth PasswordResetForm save method.",
+                "description": "Accepts the following POST parameters: email\nReturns the success/fail message.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PasswordReset"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/PasswordReset"
+                        }
+                    }
+                },
+                "tags": [
+                    "authentication"
+                ]
+            },
+            "parameters": []
+        },
+        "/authentication/password/reset/confirm/": {
+            "post": {
+                "operationId": "authentication_password_reset_confirm_create",
+                "summary": "Password reset e-mail link is confirmed, therefore\nthis resets the user's password.",
+                "description": "Accepts the following POST parameters: token, uid,\n    new_password1, new_password2\nReturns the success/fail message.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PasswordResetConfirm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/PasswordResetConfirm"
+                        }
+                    }
+                },
+                "tags": [
+                    "authentication"
+                ]
+            },
+            "parameters": []
+        },
+        "/authentication/registration/": {
+            "post": {
+                "operationId": "authentication_registration_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CustomRegister"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/CustomRegister"
+                        }
+                    }
+                },
+                "tags": [
+                    "authentication"
+                ]
+            },
+            "parameters": []
+        },
+        "/authentication/registration/account-confirm-email/": {
+            "post": {
+                "operationId": "authentication_registration_account-confirm-email_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/VerifyEmail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/VerifyEmail"
+                        }
+                    }
+                },
+                "tags": [
+                    "authentication"
+                ]
+            },
+            "parameters": []
+        },
+        "/authentication/registration/oauth/google/": {
+            "post": {
+                "operationId": "authentication_registration_oauth_google_create",
+                "description": "This endpoint handles social logins and signups",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/SocialLogin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/SocialLogin"
+                        }
+                    }
+                },
+                "tags": [
+                    "authentication"
+                ]
+            },
+            "parameters": []
+        },
+        "/authentication/registration/verify-email/": {
+            "post": {
+                "operationId": "authentication_registration_verify-email_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/VerifyEmail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/VerifyEmail"
+                        }
+                    }
+                },
+                "tags": [
+                    "authentication"
+                ]
+            },
+            "parameters": []
+        },
+        "/users": {
+            "get": {
+                "operationId": "users_list",
+                "description": "This viewset contains endpoints pertaining to the users on the platform",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/UserProfile"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": []
+        },
+        "/users/{user_id}": {
+            "get": {
+                "operationId": "users_read",
+                "description": "This viewset contains endpoints pertaining to the users on the platform",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetail"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "user_id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this user.",
+                    "required": true,
+                    "type": "integer"
                 }
-              }
-            }
-          },
-          "default": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+            ]
+        },
+        "/users/{user_id}/confirm": {
+            "patch": {
+                "operationId": "users_confirm",
+                "summary": "This endpoint is to be used by admins to confirm payment and confirm the initial call",
+                "description": ":permissions: IsAuthenticated, IsAdminUser\n:param request: contacted, payment_complete\n:param kwargs: user_id\n:return: 200",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/AdminConfirm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/AdminConfirm"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "user_id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this user.",
+                    "required": true,
+                    "type": "integer"
                 }
-              }
+            ]
+        },
+        "/users/{user_id}/daily_routine": {
+            "patch": {
+                "operationId": "users_daily_routine",
+                "summary": "This endpoint allows users to update their personal medical history",
+                "description": ":permissions: IsAuthenticated, IsOwner\n:param request:\n:param args:\n:param kwargs:\n:return:",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/DailyRoutine"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/DailyRoutine"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "user_id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this user.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/users/{user_id}/family_medical_history": {
+            "post": {
+                "operationId": "users_family_medical_history_create",
+                "summary": "This endpoint allows users to update their family medical history",
+                "description": ":permissions: IsAuthenticated, IsOwner\n:param request:\n:param args:\n:param kwargs:\n:return:",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/FamilyMedicalHistoryAdd"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/FamilyMedicalHistoryAdd"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "patch": {
+                "operationId": "users_family_medical_history_partial_update",
+                "summary": "This endpoint allows users to update their family medical history",
+                "description": ":permissions: IsAuthenticated, IsOwner\n:param request:\n:param args:\n:param kwargs:\n:return:",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/FamilyMedicalHistoryDetail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/FamilyMedicalHistoryDetail"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "delete": {
+                "operationId": "users_family_medical_history_delete",
+                "summary": "This endpoint allows users to update their family medical history",
+                "description": ":permissions: IsAuthenticated, IsOwner\n:param request:\n:param args:\n:param kwargs:\n:return:",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "user_id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this user.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/users/{user_id}/medication": {
+            "patch": {
+                "operationId": "users_medication_partial_update",
+                "summary": "This endpoint allows users to add any medications they may be taking.",
+                "description": ":permissions: IsAuthenticated, IsOwner\n:param request:\n:param args:\n:param kwargs:\n:return:",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/AddOrViewMedication"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/AddOrViewMedication"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "delete": {
+                "operationId": "users_medication_delete",
+                "summary": "This endpoint allows users to add any medications they may be taking.",
+                "description": ":permissions: IsAuthenticated, IsOwner\n:param request:\n:param args:\n:param kwargs:\n:return:",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "user_id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this user.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/users/{user_id}/payment": {
+            "patch": {
+                "operationId": "users_payment",
+                "summary": "This endpoint is to be used by the user to select a payment method and request confirmation from the admin side.",
+                "description": ":permissions: IsAuthenticated, IsOwnerOrAdmin\n:param request: payment_method\n:param kwargs: user_id\n:return: 200",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Payment"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Payment"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "user_id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this user.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/users/{user_id}/personal_information": {
+            "patch": {
+                "operationId": "users_personal_information",
+                "summary": "This endpoint allows users to update their personal information",
+                "description": ":permissions: IsAuthenticated, IsOwner\n:param request:\n:param args:\n:param kwargs:\n:return:",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PersonalInformation"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/PersonalInformation"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "user_id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this user.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/users/{user_id}/personal_medical_history": {
+            "patch": {
+                "operationId": "users_personal_medical_history",
+                "summary": "This endpoint allows users to update their personal medical history",
+                "description": ":permissions: IsAuthenticated, IsOwner\n:param request:\n:param args:\n:param kwargs:\n:return:",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PersonalMedicalHistory"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/PersonalMedicalHistory"
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "user_id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this user.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        }
+    },
+    "definitions": {
+        "CustomLogin": {
+            "required": [
+                "email",
+                "password"
+            ],
+            "type": "object",
+            "properties": {
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "format": "email",
+                    "minLength": 1
+                },
+                "password": {
+                    "title": "Password",
+                    "type": "string",
+                    "minLength": 1
+                }
             }
-          }
+        },
+        "PasswordChange": {
+            "required": [
+                "old_password",
+                "new_password1",
+                "new_password2"
+            ],
+            "type": "object",
+            "properties": {
+                "old_password": {
+                    "title": "Old password",
+                    "type": "string",
+                    "maxLength": 128,
+                    "minLength": 1
+                },
+                "new_password1": {
+                    "title": "New password1",
+                    "type": "string",
+                    "maxLength": 128,
+                    "minLength": 1
+                },
+                "new_password2": {
+                    "title": "New password2",
+                    "type": "string",
+                    "maxLength": 128,
+                    "minLength": 1
+                }
+            }
+        },
+        "PasswordReset": {
+            "required": [
+                "email"
+            ],
+            "type": "object",
+            "properties": {
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "format": "email",
+                    "minLength": 1
+                }
+            }
+        },
+        "PasswordResetConfirm": {
+            "required": [
+                "new_password1",
+                "new_password2",
+                "uid",
+                "token"
+            ],
+            "type": "object",
+            "properties": {
+                "new_password1": {
+                    "title": "New password1",
+                    "type": "string",
+                    "maxLength": 128,
+                    "minLength": 1
+                },
+                "new_password2": {
+                    "title": "New password2",
+                    "type": "string",
+                    "maxLength": 128,
+                    "minLength": 1
+                },
+                "uid": {
+                    "title": "Uid",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "token": {
+                    "title": "Token",
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "CustomRegister": {
+            "required": [
+                "email",
+                "password1",
+                "password2",
+                "first_name",
+                "last_name"
+            ],
+            "type": "object",
+            "properties": {
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "format": "email",
+                    "minLength": 1
+                },
+                "password1": {
+                    "title": "Password1",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "password2": {
+                    "title": "Password2",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "first_name": {
+                    "title": "First name",
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
+                },
+                "last_name": {
+                    "title": "Last name",
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
+                }
+            }
+        },
+        "VerifyEmail": {
+            "required": [
+                "key"
+            ],
+            "type": "object",
+            "properties": {
+                "key": {
+                    "title": "Key",
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "SocialLogin": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "title": "Access token",
+                    "type": "string"
+                },
+                "code": {
+                    "title": "Code",
+                    "type": "string"
+                }
+            }
+        },
+        "UserProfile": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "title": "User id",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "first_name": {
+                    "title": "First name",
+                    "type": "string",
+                    "readOnly": true,
+                    "minLength": 1
+                },
+                "last_name": {
+                    "title": "Last name",
+                    "type": "string",
+                    "readOnly": true,
+                    "minLength": 1
+                },
+                "date_joined": {
+                    "title": "Date joined",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "format": "email",
+                    "readOnly": true,
+                    "minLength": 1
+                },
+                "phone": {
+                    "title": "Phone",
+                    "type": "string",
+                    "readOnly": true,
+                    "minLength": 1
+                },
+                "contacted": {
+                    "title": "Contacted",
+                    "type": "boolean"
+                },
+                "personal_info_complete": {
+                    "title": "Personal info complete",
+                    "type": "boolean",
+                    "readOnly": true
+                },
+                "personal_medical_history_complete": {
+                    "title": "Personal medical history complete",
+                    "type": "boolean",
+                    "readOnly": true
+                },
+                "daily_routine_complete": {
+                    "title": "Daily routine complete",
+                    "type": "boolean",
+                    "readOnly": true
+                },
+                "payment_method": {
+                    "title": "Payment method",
+                    "type": "string",
+                    "enum": [
+                        "PayTM",
+                        "GPay",
+                        "Bank Transfer"
+                    ],
+                    "readOnly": true
+                },
+                "payment_confirmation_requested": {
+                    "title": "Payment confirmation requested",
+                    "type": "boolean"
+                },
+                "payment_complete": {
+                    "title": "Payment complete",
+                    "type": "boolean"
+                },
+                "on_boarding_complete": {
+                    "title": "On boarding complete",
+                    "type": "boolean",
+                    "readOnly": true
+                }
+            }
+        },
+        "PersonalInformation": {
+            "title": "Personal information",
+            "type": "object",
+            "properties": {
+                "profile_picture": {
+                    "title": "Profile picture",
+                    "type": "string",
+                    "readOnly": true,
+                    "format": "uri"
+                },
+                "date_of_birth": {
+                    "title": "Date of birth",
+                    "type": "string",
+                    "format": "date"
+                },
+                "gender": {
+                    "title": "Gender",
+                    "type": "string",
+                    "enum": [
+                        "Male",
+                        "Female",
+                        "Other",
+                        "Rather Not Say"
+                    ]
+                },
+                "country": {
+                    "title": "Country",
+                    "type": "string",
+                    "maxLength": 150
+                },
+                "state": {
+                    "title": "State",
+                    "type": "string",
+                    "maxLength": 150
+                },
+                "city": {
+                    "title": "City",
+                    "type": "string",
+                    "maxLength": 150
+                },
+                "profession": {
+                    "title": "Profession",
+                    "type": "string",
+                    "enum": [
+                        "Retired",
+                        "Homemaker",
+                        "Service",
+                        "Self-employed"
+                    ]
+                },
+                "drive_behind_joining": {
+                    "title": "Drive behind joining",
+                    "type": "string",
+                    "maxLength": 500
+                },
+                "diet_preference": {
+                    "title": "Diet preference",
+                    "type": "string",
+                    "enum": [
+                        "Vegetarian",
+                        "Non-Vegetarian",
+                        "Eggiterian",
+                        "Vegan"
+                    ]
+                },
+                "referral_source": {
+                    "title": "Referral source",
+                    "type": "string",
+                    "enum": [
+                        "Doctor",
+                        "Friends",
+                        "Relatives",
+                        "Newspapers",
+                        "Magazines",
+                        "Facebook",
+                        "Our Website"
+                    ]
+                },
+                "ref_name": {
+                    "title": "Ref name",
+                    "type": "string",
+                    "maxLength": 50
+                },
+                "ref_number": {
+                    "title": "Ref number",
+                    "type": "string",
+                    "maxLength": 128
+                },
+                "ref_email": {
+                    "title": "Ref email",
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 254
+                }
+            }
+        },
+        "PersonalMedicalHistory": {
+            "title": "Personal medical history",
+            "type": "object",
+            "properties": {
+                "obesity": {
+                    "title": "Obesity",
+                    "type": "boolean"
+                },
+                "blood_pressure": {
+                    "title": "Blood pressure",
+                    "type": "boolean"
+                },
+                "heart_issues": {
+                    "title": "Heart issues",
+                    "type": "boolean"
+                },
+                "diabetes": {
+                    "title": "Diabetes",
+                    "type": "boolean"
+                },
+                "cancer": {
+                    "title": "Cancer",
+                    "type": "boolean"
+                },
+                "hypothyroid": {
+                    "title": "Hypothyroid",
+                    "type": "boolean"
+                },
+                "hyperthyroid": {
+                    "title": "Hyperthyroid",
+                    "type": "boolean"
+                },
+                "pcod": {
+                    "title": "Pcod",
+                    "type": "boolean"
+                },
+                "menopausal": {
+                    "title": "Menopausal",
+                    "type": "boolean"
+                },
+                "acidity": {
+                    "title": "Acidity",
+                    "type": "boolean"
+                },
+                "gout": {
+                    "title": "Gout",
+                    "type": "boolean"
+                },
+                "other_dietary_issues": {
+                    "title": "Other dietary issues",
+                    "type": "boolean"
+                },
+                "blood_report": {
+                    "title": "Blood report",
+                    "type": "string",
+                    "readOnly": true,
+                    "format": "uri"
+                },
+                "pregnancies": {
+                    "title": "Pregnancies",
+                    "type": "integer"
+                },
+                "menstrual": {
+                    "title": "Menstrual",
+                    "type": "string",
+                    "enum": [
+                        "Normal",
+                        "Disturbed",
+                        "Menopausal",
+                        "PCOD",
+                        "Not Applicable"
+                    ]
+                },
+                "highest_weight": {
+                    "title": "Highest weight",
+                    "type": "number"
+                },
+                "lowest_weight": {
+                    "title": "Lowest weight",
+                    "type": "number"
+                },
+                "previous_efforts": {
+                    "title": "Previous efforts",
+                    "type": "string"
+                },
+                "obesity_event": {
+                    "title": "Obesity event",
+                    "type": "string"
+                },
+                "lost_and_gained_times": {
+                    "title": "Lost and gained times",
+                    "type": "integer"
+                },
+                "overweight_as_child": {
+                    "title": "Overweight as child",
+                    "type": "boolean"
+                },
+                "weight_gain_since": {
+                    "title": "Weight gain since",
+                    "type": "string",
+                    "format": "date"
+                },
+                "reason_for_gain": {
+                    "title": "Reason for gain",
+                    "type": "string"
+                },
+                "smoke": {
+                    "title": "Smoke",
+                    "type": "boolean"
+                },
+                "smoke_level": {
+                    "title": "Smoke level",
+                    "type": "string",
+                    "enum": [
+                        "Occasional",
+                        "Regular",
+                        "Heavy"
+                    ]
+                },
+                "tobacco": {
+                    "title": "Tobacco",
+                    "type": "boolean"
+                },
+                "tobacco_level": {
+                    "title": "Tobacco level",
+                    "type": "string",
+                    "enum": [
+                        "Occasional",
+                        "Regular",
+                        "Heavy"
+                    ]
+                },
+                "alcohol": {
+                    "title": "Alcohol",
+                    "type": "boolean"
+                },
+                "alcohol_level": {
+                    "title": "Alcohol level",
+                    "type": "string",
+                    "enum": [
+                        "Occasional",
+                        "Regular",
+                        "Heavy"
+                    ]
+                }
+            }
+        },
+        "AddOrViewMedication": {
+            "required": [
+                "name"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "dosage": {
+                    "title": "Dosage",
+                    "type": "integer"
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "maxLength": 500,
+                    "minLength": 1
+                }
+            }
+        },
+        "FamilyMedicalHistoryAdd": {
+            "required": [
+                "type",
+                "member"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "type": {
+                    "title": "Type",
+                    "type": "string",
+                    "enum": [
+                        "Obesity",
+                        "Blood Pressure",
+                        "Heart Attack / Bypass / Stroke",
+                        "Diabetes",
+                        "Cancer",
+                        "Hypothyroid"
+                    ]
+                },
+                "member": {
+                    "title": "Member",
+                    "type": "string",
+                    "enum": [
+                        "Mother",
+                        "Father",
+                        "Brother",
+                        "Sister",
+                        "Grand Mother",
+                        "Grand Father",
+                        "Uncle",
+                        "Aunt"
+                    ]
+                }
+            }
+        },
+        "DailyRoutine": {
+            "title": "Daily routine",
+            "required": [
+                "exercise_routine"
+            ],
+            "type": "object",
+            "properties": {
+                "wake_up_time": {
+                    "title": "Wake up time",
+                    "type": "string"
+                },
+                "breakfast_time": {
+                    "title": "Breakfast time",
+                    "type": "string"
+                },
+                "mid_morning_time": {
+                    "title": "Mid morning time",
+                    "type": "string"
+                },
+                "lunch_time": {
+                    "title": "Lunch time",
+                    "type": "string"
+                },
+                "lunch_location": {
+                    "title": "Lunch location",
+                    "type": "string",
+                    "enum": [
+                        "Home",
+                        "Lunch Box",
+                        "Office Canteen"
+                    ]
+                },
+                "tea_time": {
+                    "title": "Tea time",
+                    "type": "string"
+                },
+                "dinner_time": {
+                    "title": "Dinner time",
+                    "type": "string"
+                },
+                "bed_time": {
+                    "title": "Bed time",
+                    "type": "string"
+                },
+                "office_start_time": {
+                    "title": "Office start time",
+                    "type": "string"
+                },
+                "office_end_time": {
+                    "title": "Office end time",
+                    "type": "string"
+                },
+                "exercise_routine": {
+                    "title": "Exercise routine",
+                    "type": "string",
+                    "enum": [
+                        "Regular",
+                        "Not Regular"
+                    ]
+                },
+                "exercise_time": {
+                    "title": "Exercise time",
+                    "type": "string"
+                },
+                "cardio": {
+                    "title": "Cardio",
+                    "type": "boolean"
+                },
+                "strength_training": {
+                    "title": "Strength training",
+                    "type": "boolean"
+                },
+                "yoga": {
+                    "title": "Yoga",
+                    "type": "boolean"
+                },
+                "walk": {
+                    "title": "Walk",
+                    "type": "boolean"
+                }
+            }
+        },
+        "UserDetail": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "title": "User id",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "personal_information": {
+                    "$ref": "#/definitions/PersonalInformation"
+                },
+                "personal_medical_history": {
+                    "$ref": "#/definitions/PersonalMedicalHistory"
+                },
+                "medications": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AddOrViewMedication"
+                    },
+                    "readOnly": true
+                },
+                "family_medical_history": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/FamilyMedicalHistoryAdd"
+                    },
+                    "readOnly": true
+                },
+                "daily_routine": {
+                    "$ref": "#/definitions/DailyRoutine"
+                },
+                "first_name": {
+                    "title": "First name",
+                    "type": "string",
+                    "readOnly": true,
+                    "minLength": 1
+                },
+                "last_name": {
+                    "title": "Last name",
+                    "type": "string",
+                    "readOnly": true,
+                    "minLength": 1
+                },
+                "date_joined": {
+                    "title": "Date joined",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "format": "email",
+                    "readOnly": true,
+                    "minLength": 1
+                },
+                "phone": {
+                    "title": "Phone",
+                    "type": "string",
+                    "readOnly": true,
+                    "minLength": 1
+                },
+                "contacted": {
+                    "title": "Contacted",
+                    "type": "boolean"
+                },
+                "personal_info_complete": {
+                    "title": "Personal info complete",
+                    "type": "boolean",
+                    "readOnly": true
+                },
+                "personal_medical_history_complete": {
+                    "title": "Personal medical history complete",
+                    "type": "boolean",
+                    "readOnly": true
+                },
+                "daily_routine_complete": {
+                    "title": "Daily routine complete",
+                    "type": "boolean",
+                    "readOnly": true
+                },
+                "payment_method": {
+                    "title": "Payment method",
+                    "type": "string",
+                    "enum": [
+                        "PayTM",
+                        "GPay",
+                        "Bank Transfer"
+                    ],
+                    "readOnly": true
+                },
+                "payment_confirmation_requested": {
+                    "title": "Payment confirmation requested",
+                    "type": "boolean"
+                },
+                "payment_complete": {
+                    "title": "Payment complete",
+                    "type": "boolean"
+                },
+                "on_boarding_complete": {
+                    "title": "On boarding complete",
+                    "type": "boolean",
+                    "readOnly": true
+                }
+            }
+        },
+        "AdminConfirm": {
+            "type": "object",
+            "properties": {
+                "payment_complete": {
+                    "title": "Payment complete",
+                    "type": "boolean"
+                },
+                "contacted": {
+                    "title": "Contacted",
+                    "type": "boolean"
+                }
+            }
+        },
+        "FamilyMedicalHistoryDetail": {
+            "required": [
+                "id",
+                "type"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "Id",
+                    "type": "integer"
+                },
+                "type": {
+                    "title": "Type",
+                    "type": "string",
+                    "enum": [
+                        "Obesity",
+                        "Blood Pressure",
+                        "Heart Attack / Bypass / Stroke",
+                        "Diabetes",
+                        "Cancer",
+                        "Hypothyroid"
+                    ]
+                },
+                "member": {
+                    "title": "Member",
+                    "type": "string",
+                    "enum": [
+                        "Mother",
+                        "Father",
+                        "Brother",
+                        "Sister",
+                        "Grand Mother",
+                        "Grand Father",
+                        "Uncle",
+                        "Aunt"
+                    ],
+                    "readOnly": true
+                }
+            }
+        },
+        "Payment": {
+            "type": "object",
+            "properties": {
+                "payment_method": {
+                    "title": "Payment method",
+                    "type": "string",
+                    "enum": [
+                        "PayTM",
+                        "GPay",
+                        "Bank Transfer"
+                    ]
+                },
+                "payment_confirmation_requested": {
+                    "title": "Payment confirmation requested",
+                    "type": "boolean"
+                }
+            }
         }
-      }
     }
-  },
-  "components": {
-    "schemas": {
-      "User": {
-        "type": "object",
-        "required": [
-          "id",
-          "name"
-        ],
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "name": {
-            "type": "string"
-          },
-          "tag": {
-            "type": "string"
-          }
-        }
-      },
-      "Error": {
-        "type": "object",
-        "required": [
-          "code",
-          "message"
-        ],
-        "properties": {
-          "code": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      }
-    }
-  }
 }
