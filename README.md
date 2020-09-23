@@ -33,3 +33,10 @@ This project is built using the `Django Rest Framework` . The following are the 
 * Run the development Docker containers using `docker-compose -f Docker/docker-compose.dev.yml  up --build`.
 * Run the production Docker containers using `docker-compose -f Docker/docker-compose.prod.yml  up --build`.
 
+## Roadmap
+
+* Add Caching
+* Phase 2 - Appointment Management 
+* Phase 3 - Diet Preperation and Management
+* Phase 4 - Health Monitoring and Activity Logging for Patients
+
