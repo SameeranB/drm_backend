@@ -21,6 +21,7 @@ This is a patient management platform built for Lifestyle and Obesity Management
 This project is built using the `Django Rest Framework` . The following are the steps to setup and run this project:
 
 * Clone the repository.
+* Copy the contents of `drm_backend/env_template.txt` to a `drm_backend/.env ` file and fill them out.
 * Create your virtual environment and install all the requirements using `pip install -r requirements.txt` .
 * Run migrations using `python manage.py migrate`.
 * Run tests using `python manage.py test`.
