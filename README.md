@@ -6,10 +6,14 @@
 
 > View the Project Documentation [here](https://www.notion.so/Dr-Manisha-Bandishti-Back-End-24820115c5564fc9a78c6f9ae30ac0b1).
 >
-> View the API Documentation here.
+> View the API Documentation [here](https://documenter.getpostman.com/view/8369112/TVKEVwYd).
 
 ---
 [![Build Status](https://travis-ci.org/SameeranB/drm_backend.svg?branch=master)](https://travis-ci.org/SameeranB/drm_backend)
+
+## Description:
+
+This is a patient management platform built for Lifestyle and Obesity Management. It allows for patient onboarding, appointment management, diet management, payment portal and so on.
 
 
 ## Setup
