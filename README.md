@@ -10,7 +10,7 @@
 
 ---
 [![Build Status](https://travis-ci.org/SameeranB/drm_backend.svg?branch=master)](https://travis-ci.org/SameeranB/drm_backend)
-
+[![Coverage Status](https://coveralls.io/repos/github/SameeranB/drm_backend/badge.svg?branch=master)](https://coveralls.io/github/SameeranB/drm_backend?branch=master)
 ## Description:
 
 This is a patient management platform built for Lifestyle and Obesity Management. It allows for patient onboarding, appointment management, diet management, payment portal and so on.
