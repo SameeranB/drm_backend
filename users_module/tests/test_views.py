@@ -1,12 +1,10 @@
-import pdb
 from allauth.account.models import EmailAddress
-
 from rest_framework import status
 
-from users_module.tests.test_setup import TestSetup
+from users_module.tests.test_setup import TestAuthenticationSetup, TestUserSetup
 
 
-class TestViews(TestSetup):
+class TestAuthenticationViews(TestAuthenticationSetup):
 
     def test_user_registration_success(self):
         res = self.client.post(self.register_url, self.user_registration_data, format="json")
@@ -31,3 +29,55 @@ class TestViews(TestSetup):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
 
+class TestUserViews(TestUserSetup):
+
+    def test_user_create_family_medical_history(self):
+        pass
+
+    def test_user_update_family_medical_history(self):
+        pass
+
+    def test_user_delete_family_medical_history(self):
+        pass
+
+    def test_user_add_medication(self):
+        pass
+
+    def test_user_delete_medication(self):
+        pass
+
+    def test_user_set_daily_routine(self):
+        pass
+
+    def test_user_set_payment_method(self):
+        pass
+
+    def test_user_request_payment_confirmation(self):
+        pass
+
+    def test_user_set_personal_information(self):
+        pass
+
+    def test_user_set_personal_medical_history(self):
+        pass
+
+    def test_user_retrieve_user_self(self):
+        pass
+
+    def test_user_retrieve_user_others(self):
+        pass
+
+    def test_admin_retrieve_user(self):
+        pass
+
+    def test_admin_list_users_success(self):
+        pass
+
+    def test_admin_list_users_failure(self):
+        pass
+
+    def test_admin_confirm_success(self):
+        pass
+
+    def test_admin_confirm_failure(self):
+        pass
