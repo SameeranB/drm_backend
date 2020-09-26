@@ -1,4 +1,5 @@
 from allauth.account.models import EmailAddress
+from django.urls import reverse
 from rest_framework import status
 
 from users_module.tests.test_setup import TestAuthenticationSetup, TestUserSetup
@@ -32,6 +33,9 @@ class TestAuthenticationViews(TestAuthenticationSetup):
 class TestUserViews(TestUserSetup):
 
     def test_user_create_family_medical_history(self):
+        response = self.client.post(reverse('user-family-medical-history', args={'user_id': self.user.user_id}),  data=self.user_family_medical_history, format="json")
+        print(response)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         pass
 
     def test_user_update_family_medical_history(self):
