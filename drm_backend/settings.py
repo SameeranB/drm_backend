@@ -218,7 +218,6 @@ LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL')
 # CORS SETTINGS
 CORS_ORIGIN_ALLOW_ALL = True
 
-
 # EMAIL SETTINGS
 EMAIL_HOST = 'smtp.mailgun.org'
 # EMAIL_HOST_USER = 'no-reply@mail.your-mailgun-registered-subdomain.domain.com'
@@ -229,13 +228,13 @@ DEFAULT_FROM_EMAIL = os.environ.get("EMAIL_FROM")
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 
-
 if os.environ.get('PROD'):
     # HEROKU SETTINGS
     import django_heroku
+
     django_heroku.settings(locals())
 
-if 'DATABASE_URL' in os.environ:
-    import dj_database_url
+    if 'DATABASE_URL' in os.environ:
+        import dj_database_url
 
-    DATABASES = {'default': dj_database_url.config()}
+        DATABASES = {'default': dj_database_url.config()}
