@@ -228,7 +228,7 @@ DEFAULT_FROM_EMAIL = os.environ.get("EMAIL_FROM")
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 
-if bool(int(os.environ.get("PROD", "0"))):
+if bool(int(os.environ.get("PROD", "0"))) and bool(int(os.environ.get("HEROKU", "0"))):
     # HEROKU SETTINGS
     import django_heroku
 
